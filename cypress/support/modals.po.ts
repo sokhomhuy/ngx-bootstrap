@@ -5,14 +5,20 @@ export class ModalsPo extends BaseComponent {
   pageTitle = 'Modals';
   ghLinkToComponent = 'https://github.com/valor-software/ngx-bootstrap/tree/development/src/modal';
 
-
-  modalWindow = 'modal-container';
-  modalBtnSelector = 'modal-container button';
+  modalContainer = 'modal-container';
+  modalContent = '.modal-content';
+  modalDialog = '.modal-dialog';
+  modalBody = '.modal-body';
+  modalHeader = '.modal-header';
+  modalTitle = '.modal-title';
+  serviceModalBtn = 'modal-container button';
   modalBackdrop = '.modal-backdrop';
-  modalParagraph = `${this.modalWindow} ${'p'}`;
+  modalParagraph = `${this.modalContainer} ${'p'}`;
   demoCardBlock = '.card';
   modalPopup = '.popover-content';
   modalTooltip = 'bs-tooltip-container';
+  crossSelector = '.close';
+  openedNestedModals = `${'demo-modal-nested'} ${'.show'}`;
 
   exampleDemosArr = {
     serviceTemplate: 'demo-modal-service-static',
@@ -27,8 +33,6 @@ export class ModalsPo extends BaseComponent {
     serviceToolPopup: 'demo-modal-with-popups',
     serviceBackdrop: 'demo-modal-service-disable-backdrop',
     serviceClassChange: 'demo-modal-change-class',
-
-
     serviceOptions: 'demo-modal-service-options',
     directiveStatic: 'demo-modal-static',
     directiveSizes: 'demo-modal-sizes',
@@ -40,7 +44,7 @@ export class ModalsPo extends BaseComponent {
 
   // temporary placed here
   isElementVisible(baseSelector: string, elementToFind: string, elemNumber = 0) {
-    cy.get(`${ baseSelector } ${elementToFind}`).eq(elemNumber).should('be.visible');
+    cy.get(`${baseSelector} ${elementToFind}`).eq(elemNumber).should('be.visible');
   }
 
   isElemTextCorrect(baseSelector: string, itemSel: string, expectedText: string, rowNum = 0) {
@@ -48,14 +52,19 @@ export class ModalsPo extends BaseComponent {
       .should('contain', expectedText);
   }
 
-  isModalVisible(baseSelector: string, visible: boolean) {
-    cy.get(`${baseSelector} ${this.modalWindow}`).find('.modal-content')
+  isModalVisible(modalSelector: string, visible: boolean, elementNumber = 0) {
+    cy.get(`${'body'} ${modalSelector}`).find('.modal-content').eq(elementNumber)
       .should(visible ? 'to.be.visible' : 'not.to.be.visible');
   }
 
-  isModalDisabled(baseSelector: string, visible: boolean) {
-    cy.get(`${baseSelector} ${this.modalWindow}`).find('.modal-content')
-      .should(visible ? 'not.to.be.enabled' : 'to.be.enabled');
+  isDirectModalVisible(baseSelector: string, visible: boolean, elementNumber = 0) {
+    cy.get(baseSelector).find('.modal-content').eq(elementNumber)
+      .should(visible ? 'to.be.visible' : 'not.to.be.visible');
+  }
+
+  isModalNotEnabled(modalSelector: string, disabled: boolean) {
+    cy.get(`${'body'} ${modalSelector}`).find('.modal-content')
+      .should(disabled ? 'not.to.be.enabled' : 'to.be.enabled');
   }
 
   isBackdropEnabled() {
@@ -71,12 +80,21 @@ export class ModalsPo extends BaseComponent {
   }
 
   isModalBtnExist(btnTitle: string, elemNumber = 0) {
-    cy.get(this.modalWindow).find('button').eq(elemNumber).invoke('text')
+    cy.get(this.modalContainer).find('button').eq(elemNumber).invoke('text')
+      .should('contain', btnTitle);
+  }
+
+  isDirectModalBtnExist(modalSelector: string, btnTitle: string, elemNumber = 0) {
+    cy.get(modalSelector).find('button').eq(elemNumber).invoke('text')
       .should('contain', btnTitle);
   }
 
   clickOnModalBtn(btnTitle: string) {
-    cy.get(this.modalBtnSelector).contains(btnTitle).click();
+    cy.get(this.serviceModalBtn).contains(btnTitle).click();
+  }
+
+  clickOnDirectModalBtn(baseSelector: string, modalSelector: string, btnTitle: string, elementNumber = 0) {
+    cy.get(`${baseSelector} ${modalSelector}`).eq(elementNumber).contains(btnTitle).click();
   }
 
   checkElementsQuantity(elemToCount: string, expectedQuantity: number) {
@@ -88,10 +106,28 @@ export class ModalsPo extends BaseComponent {
       .should('contain', expectedText);
   }
 
+  isModalTitleIs(modalTitle: string) {
+    cy.get('h4').should('contain', modalTitle);
+  }
+
   isModalTooltipVisible() {
-    cy.get(this.modalWindow)
+    cy.get(this.modalContainer)
       .should('to.have.descendants', this.modalTooltip)
       .find('bs-tooltip-container')
       .should('to.have.class', 'show');
+  }
+
+  isModalWindowWidth(modalSelector: string, expectedWidth: string, elementNumber = 0) {
+    cy.get(`${modalSelector} ${'.modal-content'}`).eq(elementNumber)
+      .should('have.css', 'width', expectedWidth);
+  }
+
+  isModalHasClass(expectedClass: string) {
+    cy.get(this.modalContainer).should('to.have.descendants', expectedClass);
+  }
+
+  isChildElemExist(baseSelector: string, childName: string) {
+    cy.get(`${baseSelector} ${this.modalDialog}`)
+      .should('have.descendants', childName);
   }
 }
