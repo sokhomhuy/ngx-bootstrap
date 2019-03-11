@@ -42,7 +42,6 @@ export class ModalsPo extends BaseComponent {
     directiveAutoShow: 'demo-modal-auto-shown'
   };
 
-  // temporary placed here
   isElementVisible(baseSelector: string, elementToFind: string, elemNumber = 0) {
     cy.get(`${baseSelector} ${elementToFind}`).eq(elemNumber).should('be.visible');
   }
@@ -129,5 +128,9 @@ export class ModalsPo extends BaseComponent {
   isChildElemExist(baseSelector: string, childName: string) {
     cy.get(`${baseSelector} ${this.modalDialog}`)
       .should('have.descendants', childName);
+  }
+
+  pressEscOnModal() {
+    cy.get(`body .modal.fade.show`).type('{esc}', {force: true});
   }
 }

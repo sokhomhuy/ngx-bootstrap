@@ -146,7 +146,8 @@ describe('Modals demo page test suite', () => {
       it(`when user closes modal by pressing ESC button then modal is closed and should be messages
     "onHide event has been fired" and "onHidden event has been fired"`, () => {
         modals.clickByText(eventsDemo, btnText);
-        modals.pressEsc();
+        // modals.pressEsc();
+        modals.pressEscOnModal();
         modals.isModalNotEnabled(modals.modalContainer, true);
         modals.isBackdropDisabled();
         modals.isDemoContainsTxt(eventsDemo, demoOnEscDHide);
@@ -583,16 +584,20 @@ describe('Modals demo page test suite', () => {
       "event onHidden is fired" and "onHidden event has been fired"`, () => {
         modals.clickByText(eventsModalsDemo, btnText);
         modals.clickOutside(eventsModalsDemo);
+        modals.isModalNotEnabled(eventsModalsDemo, true);
         modals.isDemoContainsTxt(eventsModalsDemo, eventOnOutsideHide);
         modals.isDemoContainsTxt(eventsModalsDemo, eventOnOutsideHidden);
       });
 
-      it.only(`when user user closes modal by pressing ESC button then modal is closed and should be messages
+      it(`when user user closes modal by pressing ESC button then modal is closed and should be messages
       "event onHide is fired, dismissed by esc" and "event onHidden is fired, dismissed by esc"`, () => {
         modals.clickByText(eventsModalsDemo, btnText);
-        // modals.pressEsc();  // TODO: ESC doesn't work. the modal stays opened
-        // modals.isModalDemoContainsText(eventsModalsDemo, eventOnEscHide);
-        // modals.isModalDemoContainsText(eventsModalsDemo, eventOnEcsHidden);
+        modals.isDirectModalVisible(eventsModalsDemo, true);
+        cy.get(`${eventsModalsDemo} ${modals.modalContent}`).should('to.be.enabled')  // TODO!!!
+        cy.get('.modal.fade').last().should('have.class', 'show');
+        modals.pressEscOnModal();
+        // modals.isDemoContainsTxt(eventsModalsDemo, eventOnEscHide);
+        // modals.isDemoContainsTxt(eventsModalsDemo, eventOnEcsHidden);
       });
     });
 
