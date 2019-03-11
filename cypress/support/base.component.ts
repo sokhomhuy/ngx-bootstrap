@@ -197,13 +197,13 @@ export abstract class BaseComponent {
     cy.get(`${baseSelector} ${elementToFind}`).eq(elemNumber).should('be.visible');
   }
 
-  isUrlExist(urlToCheck: string) {
-    cy.url().should('include', urlToCheck);
+  isUrlExist(expectedUrl: string) {
+    cy.url().should('include', expectedUrl);
   }
 
-  isElemHasCorrectUrl(elementSelector: string, link: string) {
-    cy.get(`${elementSelector} [href="${ link }"]`)
+  isElemHasCorrectUrl(elementSelector: string, expectedUrl: string) {
+    cy.get(`${elementSelector} [href="${ expectedUrl }"]`)
       .should('have.attr', 'href')
-      .and('equal', link);
+      .and('to.equal', expectedUrl);
   }
 }
