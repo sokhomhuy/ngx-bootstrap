@@ -1,4 +1,5 @@
 import { ModalsPo } from '../support/modals.po';
+import { TooltipPo } from '../support/tooltip.po';
 
 describe('Modals demo page test suite', () => {
   const modals = new ModalsPo();
@@ -25,7 +26,7 @@ describe('Modals demo page test suite', () => {
         modals.isModalBtnExist(modalBtnClose, 1);
       });
 
-      it('user closes modal by clicking on "Close" button', () => {
+      it('when user closes modal by clicking on "Close" button', () => {
         modals.clickByText(componentDemo, btnText);
         modals.clickOnModalBtn(modalBtnClose);
         modals.isModalNotEnabled(modals.modalContainer, true);
@@ -123,12 +124,10 @@ describe('Modals demo page test suite', () => {
 
       it(`when user closes modal by click on the cross then should be messages "onHide event has been fired"
       and "onHidden event has been fired"`, () => {
-        // TODO: cy.get('card card-block card-header').eq(2).as('demo');
-
         modals.clickByText(eventsDemo, btnText);
         modals.clickOnModalBtn(btnX);
         modals.isModalNotEnabled(modals.modalContainer, true);
-        cy.wait(500); // TODO: make without a wait
+        modals.isDemoContainsTxt(eventsDemo, demoOnHideFired);
         modals.isModalDemoContainsText(eventsDemo, demoOnHideFired, 2);
         modals.isModalDemoContainsText(eventsDemo, demoOnHiddenFired, 3);
       });
@@ -138,20 +137,21 @@ describe('Modals demo page test suite', () => {
         modals.clickByText(eventsDemo, btnText);
         modals.clickOutside(modals.modalContainer);
         modals.isModalNotEnabled(modals.modalContainer, true);
-        cy.wait(500); // TODO: make without a wait
+        modals.isBackdropDisabled();
+        modals.isDemoContainsTxt(eventsDemo, demoOnHideFired);
         modals.isModalDemoContainsText(eventsDemo, demoHideDismissed, 2);
         modals.isModalDemoContainsText(eventsDemo, demoHiddenDismissed, 3);
       });
 
       it(`when user closes modal by pressing ESC button then modal is closed and should be messages
     "onHide event has been fired" and "onHidden event has been fired"`, () => {
-        // TODO: ESC does not work on a modal popup: 'cy.type() failed because it requires a valid typeable element'
-        // modals.clickByText(eventsDemo, btnText);
-        // cy.get(modals.modalContainer).type('{esc}');
-        // modals.isModalNotEnabled(modals.modalContainer, true);
-        // cy.wait(500); // TODO: make without a wait
-        // modals.isModalDemoContainsText(eventsDemo, demoOnEscDHide, 2);
-        // modals.isModalDemoContainsText(eventsDemo, demoOnEscHidden, 3);
+        modals.clickByText(eventsDemo, btnText);
+        modals.pressEsc();
+        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isBackdropDisabled();
+        modals.isDemoContainsTxt(eventsDemo, demoOnEscDHide);
+        modals.isModalDemoContainsText(eventsDemo, demoOnEscDHide, 2);
+        modals.isModalDemoContainsText(eventsDemo, demoOnEscHidden, 3);
       });
     });
 
@@ -240,7 +240,6 @@ describe('Modals demo page test suite', () => {
       it('when user clicks on "Open modal" button then modal is opened. it appears with animations effects', () => {
         modals.clickByText(animationDemo, btnText);
         modals.isModalVisible(modals.modalContainer, true);
-        // can't check if the animation works
       });
 
       it('when user clicks on "Disable animation" button then title of the button is changed to "Enable animation"',
@@ -277,7 +276,7 @@ describe('Modals demo page test suite', () => {
       it(`when user clicks on "Open modal" button then modal is opened. when user closes modal by click
       ESC button then modal stays opened`, () => {
         modals.clickByText(escapeDemo, btnText);
-        cy.get(modals.modalContainer).type('{esc}');
+        modals.pressEsc();
         modals.isModalVisible(modals.modalContainer, true);
       });
 
@@ -290,7 +289,7 @@ describe('Modals demo page test suite', () => {
       it(`after that click on "Open modal" button, modal popup is opened. when user press ESC button then modal
       is closed`, () => {
         modals.clickByText(escapeDemo, btnText);
-        cy.get(modals.modalContainer).type('{esc}');
+        modals.pressEsc();
         modals.isModalNotEnabled(modals.modalContainer, true);
       });
     });
@@ -298,6 +297,7 @@ describe('Modals demo page test suite', () => {
     describe('Modal window with tooltip and popover', () => {
       beforeEach(() => modals.scrollToMenu('Modal window with tooltip and popover'));
 
+      const tooltip = new TooltipPo();
       const toolPopupDemo = modals.exampleDemosArr.serviceToolPopup;
       const btnText = 'Open modal';
       const btnPopover = 'popover';
@@ -324,7 +324,7 @@ describe('Modals demo page test suite', () => {
       it(`when user hover on "tooltip" button then a popup is shown`,
         () => {
           modals.clickByText(toolPopupDemo, btnText);
-          cy.get(modals.modalContainer).contains('tooltip').focus();
+          tooltip.focusOnBtn(modals.modalBody, 3);
           modals.isModalTooltipVisible();
         });
     });
@@ -350,7 +350,7 @@ describe('Modals demo page test suite', () => {
           modals.clickByText(backdropDemo, btnText);
           modals.isModalVisible(modals.modalContainer, true);
           modals.isBackdropEnabled();
-          cy.get(`${'body'} ${modals.modalBackdrop}`).click({ force: true });
+          modals.clickOnBackdrop();
           modals.isModalNotEnabled(modals.modalContainer, true);
         });
 
@@ -377,7 +377,7 @@ describe('Modals demo page test suite', () => {
     });
 
     describe('Change class', () => {
-      beforeEach(() => modals.scrollToMenu('Change class'));
+      beforeEach(() => cy.viewport(1440, 900));
 
       const classChangeDemo = modals.exampleDemosArr.serviceClassChange;
       const btnText = 'Create template modal';
@@ -388,6 +388,7 @@ describe('Modals demo page test suite', () => {
       const modalClassLG = '.modal-dialog.modal-lg';
 
       it('example contains the button "Create template modal"', () => {
+        modals.clickOnDemoMenu('Change class');
         modals.isButtonExist(classChangeDemo, btnText);
       });
 
@@ -532,7 +533,6 @@ describe('Modals demo page test suite', () => {
           modals.clickByText(nestedModalsDemo, btnText);
           modals.clickOnDirectModalBtn(nestedModalsDemo, modals.modalBody, btnOpen2nd);
           modals.clickOnDirectModalBtn(nestedModalsDemo, modals.modalBody, btnOpen3rd, 1);
-          cy.log('3rd modal is opened');
           modals.checkElementsQuantity(modals.openedNestedModals, 3);
           modals.clickOnDirectModalBtn(nestedModalsDemo, modals.crossSelector, btnX, 2);
           modals.checkElementsQuantity(modals.openedNestedModals, 2);
@@ -567,37 +567,32 @@ describe('Modals demo page test suite', () => {
       "event onShow is fired" and "event onShown is fired"`, () => {
         modals.clickByText(eventsModalsDemo, btnText);
         modals.isDirectModalVisible(eventsModalsDemo, true);
-        cy.wait(500);
-        modals.isModalDemoContainsText(eventsModalsDemo, eventOnShowFired);
-        modals.isModalDemoContainsText(eventsModalsDemo, eventOnShownFired, 1);
+        modals.isDemoContainsTxt(eventsModalsDemo, eventOnShowFired);
+        modals.isDemoContainsTxt(eventsModalsDemo, eventOnShownFired);
       });
 
       it(`when user closes modal by click on the cross then should be messages "event onHide is fired"
       and "event onHidden is fired"`, () => {
         modals.clickByText(eventsModalsDemo, btnText);
         modals.clickOnDirectModalBtn(eventsModalsDemo, modals.crossSelector, btnX);
-        cy.wait(500); // TODO: make without a wait
-        modals.isModalDemoContainsText(eventsModalsDemo, eventOnXHide, 1);
-        modals.isModalDemoContainsText(eventsModalsDemo, eventOnXHidden, 3);
+        modals.isDemoContainsTxt(eventsModalsDemo, eventOnXHide);
+        modals.isDemoContainsTxt(eventsModalsDemo, eventOnXHidden);
       });
 
       it(`when user user closes modal by click outside the modal window then should be messages
       "event onHidden is fired" and "onHidden event has been fired"`, () => {
         modals.clickByText(eventsModalsDemo, btnText);
         modals.clickOutside(eventsModalsDemo);
-        cy.wait(500); // TODO: make without a wait
-        modals.isModalDemoContainsText(eventsModalsDemo, eventOnOutsideHide, 1);
-        modals.isModalDemoContainsText(eventsModalsDemo, eventOnOutsideHidden, 3);
+        modals.isDemoContainsTxt(eventsModalsDemo, eventOnOutsideHide);
+        modals.isDemoContainsTxt(eventsModalsDemo, eventOnOutsideHidden);
       });
 
-      it(`when user user closes modal by pressing ESC button then modal is closed and should be messages
+      it.only(`when user user closes modal by pressing ESC button then modal is closed and should be messages
       "event onHide is fired, dismissed by esc" and "event onHidden is fired, dismissed by esc"`, () => {
-        // TODO: ESC does not work on a modal popup: 'cy.type() failed because it requires a valid typeable element'
-        // modals.clickByText(eventsModalsDemo, btnText);
-        // cy.get(modals.modalContent).type('{esc}');
-        // cy.wait(500); // TODO: make without a wait
-        // modals.isModalDemoContainsText(eventsModalsDemo, eventOnOutsideHide, 2);
-        // modals.isModalDemoContainsText(eventsModalsDemo, eventOnOutsideHidden, 3);
+        modals.clickByText(eventsModalsDemo, btnText);
+        // modals.pressEsc();  // TODO: ESC doesn't work. the modal stays opened
+        // modals.isModalDemoContainsText(eventsModalsDemo, eventOnEscHide);
+        // modals.isModalDemoContainsText(eventsModalsDemo, eventOnEcsHidden);
       });
     });
 
@@ -622,7 +617,7 @@ describe('Modals demo page test suite', () => {
         () => {
           modals.clickByText(autoDemo, btnText);
           modals.clickOnDirectModalBtn(autoDemo, modals.crossSelector, btnX);
-          cy.get(`${autoDemo} ${modals.modalDialog}`).should('not.be.enabled');
+          modals.isModalNotEnabled(autoDemo, true);
         });
     });
   });

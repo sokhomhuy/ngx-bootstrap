@@ -37,7 +37,7 @@ describe('Modals demo page test suite', () => {
 
     it('when user press on ESC btn then the modal is closed', () => {
       modals.clickByText(templateDemo, btnText);
-      cy.get(modals.modalContainer).type('{esc}');
+      modals.pressEsc();
       modals.isModalVisible(modals.modalContainer, true);
     });
   });
