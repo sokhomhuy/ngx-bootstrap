@@ -25,17 +25,6 @@ describe('Timepicker demo page test suite: Disabled', () => {
     timepicker.isInputDisabled(disabled, 1, true);
   });
 
-  it(`when user clicks on "Enable / Disable input" button, then timepicker inputs, buttons become disabled`, () => {
-    timepicker.clickOnBtn(disabled, 1);
-    timepicker.isButtonDisabled(disabled, 0);
-    timepicker.isArrowDisabled(disabled, 'up', 0);
-    timepicker.isArrowDisabled(disabled, 'up', 1);
-    timepicker.isArrowDisabled(disabled, 'down', 0);
-    timepicker.isArrowDisabled(disabled, 'down', 1);
-    timepicker.isInputDisabled(disabled, 0, true);
-    timepicker.isInputDisabled(disabled, 1, true);
-  });
-
   it(`when user clicks on "Enable / Disable input" again, then timepicker inputs, buttons become clickable,
     after click on arrow up above the hour, minute input, then hours increased at 1 and minutes increased at 5`, () => {
     const newDate = new Date();

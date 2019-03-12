@@ -1,4 +1,4 @@
-14.5: Timepicker Toggle minutes/seconds example
+14.6: Timepicker Toggle minutes/seconds example
 ===============================================
 **Primary Actor**: User
 

@@ -1,5 +1,5 @@
-14.4: Timepicker Min - Max example
-========================================
+14.5: Timepicker Min - Max example
+==================================
 **Primary Actor**: User
 
 **Scope**: Ngx-bootstrap DEMO / BS version 3&4

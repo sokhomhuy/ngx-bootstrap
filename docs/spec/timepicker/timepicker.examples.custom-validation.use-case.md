@@ -1,5 +1,5 @@
-14.9: Timepicker Custom validation example
-==========================================
+14.10: Timepicker Custom validation example
+===========================================
 **Primary Actor**: User
 
 **Scope**: Ngx-bootstrap DEMO / BS version 3&4

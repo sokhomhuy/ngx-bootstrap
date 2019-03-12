@@ -16,6 +16,7 @@ export class TimepickerPo extends BaseComponent {
     readonly: 'demo-timepicker-readonly',
     customSteps: 'demo-timepicker-custom',
     customValidation: 'demo-timepicker-custom-validation',
+    isValidEvent: 'demo-timepicker-isvalid',
     dynamic: 'demo-timepicker-dynamic',
     mousewheel: 'demo-timepicker-mousewheel',
     arrowKeys: 'demo-timepicker-arrowkeys',
@@ -92,7 +93,7 @@ export class TimepickerPo extends BaseComponent {
   isInputValueContain(baseSelector: string, expectedTxt: string, inputIndex = 0) {
     if (!Number(expectedTxt)) {
       cy.get(`${baseSelector} input`).eq(inputIndex).should('to.have.value', expectedTxt);
-      } else {
+    } else {
       cy.get(`${baseSelector} input`).eq(inputIndex).then(input => {
         if (Number(input.val()) === Number(expectedTxt)) {
           expect(input.val()).to.contains(expectedTxt);
@@ -123,5 +124,10 @@ export class TimepickerPo extends BaseComponent {
       .eq(inputIndex)
       .should('to.be.visible')
       .then(input => expect(input.val()).to.be.not.empty);
+  }
+
+  pressKeyOnInput(baseSelector: string, keyToPress: string, inputIndex = 0) {
+    cy.get(`${baseSelector} input`).eq(inputIndex)
+      .type(keyToPress);
   }
 }
