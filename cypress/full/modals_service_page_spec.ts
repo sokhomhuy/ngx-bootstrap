@@ -23,17 +23,17 @@ describe('Modals demo page test suite', () => {
       "Close" button is present`, () => {
         modals.clickByText(componentDemo, btnText);
         modals.isModalVisible(modals.modalContainer, true);
-        modals.isModalBtnExist(modalBtnClose, 1);
+        modals.isButtonExist(modals.modalFooter, modalBtnClose);
       });
 
       it('when user closes modal by clicking on "Close" button', () => {
         modals.clickByText(componentDemo, btnText);
         modals.clickOnModalBtn(modalBtnClose);
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isModalEnabled(modals.modalContainer, false);
       });
     });
 
-    describe('Nested modals', () => {
+    describe.only('Nested modals', () => {
       beforeEach(() => modals.scrollToMenu('Nested modals'));
 
       const nestedDemo = modals.exampleDemosArr.serviceNested;
@@ -52,7 +52,7 @@ describe('Modals demo page test suite', () => {
         modals.clickByText(nestedDemo, btnText);
         modals.isModalVisible(modals.modalContainer, true);
         modals.isModalTitleIs(firstModalTitle);
-        modals.isModalBtnExist(open2ndModal, 1);
+        modals.isButtonExist(modals.modalBody, open2ndModal);
       });
 
       it(`when user clicks on the button "Open second modal" then the second modal with title "Second modal" is opened,
@@ -60,7 +60,7 @@ describe('Modals demo page test suite', () => {
         modals.clickByText(nestedDemo, btnText);
         modals.clickOnModalBtn(open2ndModal);
         modals.isModalTitleIs(secondModalTitle);
-        modals.isModalBtnExist(close1stModal, 3);
+        modals.isButtonExist(modals.modalBody, close1stModal, 3);
         modals.checkElementsQuantity(modals.modalContainer, 2);
       });
 
@@ -118,41 +118,40 @@ describe('Modals demo page test suite', () => {
       "onShow event has been fired" and "onShown event has been fired"`, () => {
         modals.clickByText(eventsDemo, btnText);
         modals.isModalVisible(modals.modalContainer, true);
-        modals.isModalDemoContainsText(eventsDemo, demoOnShowFired);
-        modals.isModalDemoContainsText(eventsDemo, demoOnShownFired, 1);
+        modals.isDemoContainsTxt(eventsDemo, demoOnShowFired);
+        modals.isDemoContainsTxt(eventsDemo, demoOnShownFired);
       });
 
       it(`when user closes modal by click on the cross then should be messages "onHide event has been fired"
       and "onHidden event has been fired"`, () => {
         modals.clickByText(eventsDemo, btnText);
         modals.clickOnModalBtn(btnX);
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isModalEnabled(modals.modalContainer, false);
         modals.isDemoContainsTxt(eventsDemo, demoOnHideFired);
-        modals.isModalDemoContainsText(eventsDemo, demoOnHideFired, 2);
-        modals.isModalDemoContainsText(eventsDemo, demoOnHiddenFired, 3);
+        modals.isDemoContainsTxt(eventsDemo, demoOnHideFired);
+        modals.isDemoContainsTxt(eventsDemo, demoOnHiddenFired);
       });
 
       it(`when user user closes modal by click outside the modal window then should be messages
     "onHide event has been fired" and "onHidden event has been fired"`, () => {
         modals.clickByText(eventsDemo, btnText);
         modals.clickOutside(modals.modalContainer);
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isModalEnabled(modals.modalContainer, false);
         modals.isBackdropDisabled();
         modals.isDemoContainsTxt(eventsDemo, demoOnHideFired);
-        modals.isModalDemoContainsText(eventsDemo, demoHideDismissed, 2);
-        modals.isModalDemoContainsText(eventsDemo, demoHiddenDismissed, 3);
+        modals.isDemoContainsTxt(eventsDemo, demoHideDismissed);
+        modals.isDemoContainsTxt(eventsDemo, demoHiddenDismissed);
       });
 
       it(`when user closes modal by pressing ESC button then modal is closed and should be messages
     "onHide event has been fired" and "onHidden event has been fired"`, () => {
         modals.clickByText(eventsDemo, btnText);
-        // modals.pressEsc();
-        modals.pressEscOnModal();
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.pressEsc();
+        modals.isModalEnabled(modals.modalContainer, false);
         modals.isBackdropDisabled();
         modals.isDemoContainsTxt(eventsDemo, demoOnEscDHide);
-        modals.isModalDemoContainsText(eventsDemo, demoOnEscDHide, 2);
-        modals.isModalDemoContainsText(eventsDemo, demoOnEscHidden, 3);
+        modals.isDemoContainsTxt(eventsDemo, demoOnEscDHide);
+        modals.isDemoContainsTxt(eventsDemo, demoOnEscHidden);
       });
     });
 
@@ -176,22 +175,22 @@ describe('Modals demo page test suite', () => {
         () => {
           modals.clickByText(confirmDemo, btnText);
           modals.isModalVisible(modals.modalContainer, true);
-          modals.isModalBtnExist(btnYes);
-          modals.isModalBtnExist(btnNo, 1);
+          modals.isButtonExist(modals.modalBody, btnYes, 2);
+          modals.isButtonExist(modals.modalBody, btnNo, 3);
         });
 
       it('when user clicks on "Yes" button then modal is closed, message "Confirmed!" is displayed', () => {
         modals.clickByText(confirmDemo, btnText);
         modals.clickOnModalBtn(btnYes);
-        modals.isModalNotEnabled(modals.modalContainer, true);
-        modals.isModalDemoContainsText(confirmDemo, demoTextConfirmed);
+        modals.isModalEnabled(modals.modalContainer, false);
+        modals.isPreviewExist(confirmDemo, demoTextConfirmed);
       });
 
       it('when user clicks on "No" button then modal is closed, message "Declined!" is displayed', () => {
         modals.clickByText(confirmDemo, btnText);
         modals.clickOnModalBtn(btnNo);
-        modals.isModalNotEnabled(modals.modalContainer, true);
-        modals.isModalDemoContainsText(confirmDemo, demoTextDeclined);
+        modals.isModalEnabled(modals.modalContainer, false);
+        modals.isPreviewExist(confirmDemo, demoTextDeclined);
       });
 
       it('when user clicks outside the modal then modal is closed, no message is displayed', () => {
@@ -220,7 +219,7 @@ describe('Modals demo page test suite', () => {
       it('when user clicks on the cross button then the modal is closed', () => {
         modals.clickByText(customCSSDemo, btnText);
         modals.clickOnModalBtn(btnX);
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isModalEnabled(modals.modalContainer, false);
       });
     });
 
@@ -257,7 +256,7 @@ describe('Modals demo page test suite', () => {
       it('when user clicks on the cross button then the modal is closed', () => {
         modals.clickByText(animationDemo, btnText);
         modals.clickOnModalBtn(btnX);
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isModalEnabled(modals.modalContainer, false);
       });
     });
 
@@ -291,7 +290,7 @@ describe('Modals demo page test suite', () => {
       is closed`, () => {
         modals.clickByText(escapeDemo, btnText);
         modals.pressEsc();
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isModalEnabled(modals.modalContainer, false);
       });
     });
 
@@ -312,8 +311,8 @@ describe('Modals demo page test suite', () => {
        are present`, () => {
         modals.clickByText(toolPopupDemo, btnText);
         modals.isModalVisible(modals.modalContainer, true);
-        modals.isModalBtnExist(btnPopover, 1);
-        modals.isModalBtnExist(btnTooltip, 2);
+        modals.isButtonExist(modals.modalBody, btnPopover, 2);
+        modals.isButtonExist(modals.modalBody, btnTooltip, 3);
       });
 
       it('when user clicks on "popup" button then a popup is shown', () => {
@@ -352,7 +351,7 @@ describe('Modals demo page test suite', () => {
           modals.isModalVisible(modals.modalContainer, true);
           modals.isBackdropEnabled();
           modals.clickOnBackdrop();
-          modals.isModalNotEnabled(modals.modalContainer, true);
+          modals.isModalEnabled(modals.modalContainer, false);
         });
 
       it(`when user clicks "Disable backdrop" then title of the button changes to "Enable background", after
@@ -362,7 +361,7 @@ describe('Modals demo page test suite', () => {
         modals.clickByText(backdropDemo, btnText);
         modals.isModalVisible(modals.modalContainer, true);
         modals.isBackdropDisabled();
-        modals.isModalNotEnabled(modals.modalContainer, true);
+        modals.isModalEnabled(modals.modalContainer, false);
       });
 
       it(`when user clicks on "Disable backdrop click" button, title of button should change to "Enable backdrop click",
@@ -398,8 +397,8 @@ describe('Modals demo page test suite', () => {
         () => {
           modals.clickByText(classChangeDemo, btnText);
           modals.isModalVisible(modals.modalContainer, true);
-          modals.isModalBtnExist(btnChangeWidth, 1);
-          modals.isModalWindowWidth(modals.modalContainer, width300px);
+          modals.isButtonExist(`${modals.modalContainer} div`, btnChangeWidth, 1);
+          modals.isModalWindowWidthEqual(modals.modalContainer, width300px);
           modals.isModalHasClass(modalClassSM);
         });
 
@@ -408,222 +407,9 @@ describe('Modals demo page test suite', () => {
         modals.clickByText(classChangeDemo, btnText);
         modals.isModalVisible(modals.modalContainer, true);
         modals.clickOnModalBtn(btnChangeWidth);
-        modals.isModalWindowWidth(modals.modalContainer, width800px);
+        modals.isModalWindowWidthEqual(modals.modalContainer, width800px);
         modals.isModalHasClass(modalClassLG);
       });
-    });
-  });
-
-  describe('Modals demo page test suite', () => {
-    beforeEach(() => modals.navigateTo());
-
-    describe('Directive examples', () => {
-      describe('Static modal', () => {
-        beforeEach(() => modals.scrollToMenu('Static modal'));
-
-        const staticModalDemo = modals.exampleDemosArr.directiveStatic;
-        const btnText = 'Static modal';
-        const btnX = '×';
-
-        it('example contains the button "Static modal"', () => {
-          modals.isButtonExist(staticModalDemo, btnText);
-        });
-
-        it(`when user clicks on "Static modal" button then modal is opened. after click on backdrop the modal
-       stays opened`, () => {
-          modals.clickByText(staticModalDemo, btnText);
-          modals.isModalVisible(modals.modalDialog, true);
-          modals.clickOnBackdrop();
-          modals.isModalVisible(modals.modalDialog, true);
-        });
-
-        it('when user clicks on the cross button then the modal is closed', () => {
-          modals.clickByText(staticModalDemo, btnText);
-          modals.isModalVisible(modals.modalDialog, true);
-          modals.clickOnDirectModalBtn(staticModalDemo, modals.modalHeader, btnX);
-          modals.isModalNotEnabled(modals.modalDialog, true);
-        });
-      });
-
-      describe('Optional sizes', () => {
-        beforeEach(() => modals.scrollToMenu('Optional sizes'));
-
-        const sizeDemo = modals.exampleDemosArr.directiveSizes;
-        const btnLargeModal = 'Large modal';
-        const btnSmallModal = 'Small modal';
-        const width300px = '300px';
-        const width800px = '800px';
-
-        it('example contains the buttons "Large modal" and "Small modal"', () => {
-          modals.isButtonExist(sizeDemo, btnLargeModal);
-          modals.isButtonExist(sizeDemo, btnSmallModal, 2);
-        });
-
-        it('when user clicks on the "Large modal" button then large modal is opened', () => {
-          modals.clickByText(sizeDemo, btnLargeModal);
-          modals.isModalVisible(modals.modalDialog, true, 1);
-          modals.isModalWindowWidth(modals.modalDialog, width800px, 1);
-        });
-
-        it('when user clicks on the "Small modal" button then large modal is opened', () => {
-          modals.clickOnBtn(sizeDemo, 2);
-          modals.isModalVisible(modals.modalDialog, true, 2);
-          modals.isModalWindowWidth(modals.modalDialog, width300px, 2);
-        });
-      });
-
-      describe('Child modal', () => {
-        beforeEach(() => modals.scrollToMenu('Child modal'));
-
-        const childModalDemo = modals.exampleDemosArr.directiveChild;
-        const btnText = 'Open child modal';
-
-        it('example contains the button "Open child modal"', () => {
-          modals.isButtonExist(childModalDemo, btnText);
-        });
-
-        it('when user clicks on the "Open child modal" button then modal is opened from the parent component',
-          () => {
-            modals.clickByText(childModalDemo, btnText);
-            modals.isModalVisible(modals.modalDialog, true, 3);
-            modals.isChildElemExist(childModalDemo, modals.modalContent);
-          });
-      });
-
-      describe('Nested modals', () => {
-        beforeEach(() => modals.scrollToMenu('Nested modals'));
-
-        const nestedModalsDemo = modals.exampleDemosArr.directiveNested;
-        const btnText = 'Open parent modal';
-        const btnOpen2nd = 'Open second modal';
-        const btnOpen3rd = 'Open third modal';
-        const btnX = '×';
-        const firstModalTitle = 'First modal';
-        const secondModalTitle = 'Second modal';
-        const thirdModalTitle = 'Third modal';
-
-        it('example contains the button "Open parent modal"', () => {
-          modals.isButtonExist(nestedModalsDemo, btnText);
-        });
-
-        it(`when user clicks on "Open parent modal" button then modal is opened. it has title "First modal" and
-    the button "Open second modal"`, () => {
-          modals.clickByText(nestedModalsDemo, btnText);
-          modals.isDirectModalVisible(nestedModalsDemo, true);
-          modals.isElemTextCorrect(nestedModalsDemo, modals.modalTitle, firstModalTitle);
-          modals.isDirectModalBtnExist(modals.modalBody, btnOpen2nd);
-        });
-
-        it(`when user clicks on "Open second modal" button then the 2nd modal is opened. it has title "Second modal" and
-    the button "Open third modal"`, () => {
-          modals.clickByText(nestedModalsDemo, btnText);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.modalBody, btnOpen2nd);
-          modals.isElemTextCorrect(nestedModalsDemo, modals.modalTitle, secondModalTitle, 1);
-          modals.isDirectModalBtnExist(modals.modalBody, btnOpen3rd, 1);
-        });
-
-        it('when user clicks on "Open third modal" button then the 3rd modal is opened', () => {
-          modals.clickByText(nestedModalsDemo, btnText);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.modalBody, btnOpen2nd);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.modalBody, btnOpen3rd, 1);
-          modals.isElemTextCorrect(nestedModalsDemo, modals.modalTitle, thirdModalTitle, 2);
-        });
-
-        it(`when user closes the third modal then the second is visible, and when user closes the second modal
-      then the first is visible`, () => {
-          modals.clickByText(nestedModalsDemo, btnText);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.modalBody, btnOpen2nd);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.modalBody, btnOpen3rd, 1);
-          modals.checkElementsQuantity(modals.openedNestedModals, 3);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.crossSelector, btnX, 2);
-          modals.checkElementsQuantity(modals.openedNestedModals, 2);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.crossSelector, btnX, 1);
-          modals.checkElementsQuantity(modals.openedNestedModals, 1);
-          modals.clickOnDirectModalBtn(nestedModalsDemo, modals.crossSelector, btnX);
-          modals.checkElementsQuantity(modals.openedNestedModals, 0);
-        });
-      });
-    });
-
-    describe('Modal events', () => {
-      beforeEach(() => modals.scrollToMenu('Modal events'));
-
-      const eventsModalsDemo = modals.exampleDemosArr.directiveEvents;
-      const btnText = 'Open a modal';
-      const btnX = '×';
-      const eventOnShowFired = 'event onShow is fired';
-      const eventOnShownFired = 'event onShown is fired';
-      const eventOnXHide = 'event onHide is fired';
-      const eventOnXHidden = 'event onHidden is fired';
-      const eventOnOutsideHide = 'event onHide is fired, dismissed by backdrop-click';
-      const eventOnOutsideHidden = 'event onHidden is fired, dismissed by backdrop-click';
-      const eventOnEscHide = 'event onHide is fired, dismissed by esc';
-      const eventOnEcsHidden = 'event onHidden is fired, dismissed by esc';
-
-      it('example contains the button "Open a modal"', () => {
-        modals.isButtonExist(eventsModalsDemo, btnText);
-      });
-
-      it(`when user clicks on "Open a modal" button then modal is opened then should be two messages
-      "event onShow is fired" and "event onShown is fired"`, () => {
-        modals.clickByText(eventsModalsDemo, btnText);
-        modals.isDirectModalVisible(eventsModalsDemo, true);
-        modals.isDemoContainsTxt(eventsModalsDemo, eventOnShowFired);
-        modals.isDemoContainsTxt(eventsModalsDemo, eventOnShownFired);
-      });
-
-      it(`when user closes modal by click on the cross then should be messages "event onHide is fired"
-      and "event onHidden is fired"`, () => {
-        modals.clickByText(eventsModalsDemo, btnText);
-        modals.clickOnDirectModalBtn(eventsModalsDemo, modals.crossSelector, btnX);
-        modals.isDemoContainsTxt(eventsModalsDemo, eventOnXHide);
-        modals.isDemoContainsTxt(eventsModalsDemo, eventOnXHidden);
-      });
-
-      it(`when user user closes modal by click outside the modal window then should be messages
-      "event onHidden is fired" and "onHidden event has been fired"`, () => {
-        modals.clickByText(eventsModalsDemo, btnText);
-        modals.clickOutside(eventsModalsDemo);
-        modals.isModalNotEnabled(eventsModalsDemo, true);
-        modals.isDemoContainsTxt(eventsModalsDemo, eventOnOutsideHide);
-        modals.isDemoContainsTxt(eventsModalsDemo, eventOnOutsideHidden);
-      });
-
-      it(`when user user closes modal by pressing ESC button then modal is closed and should be messages
-      "event onHide is fired, dismissed by esc" and "event onHidden is fired, dismissed by esc"`, () => {
-        modals.clickByText(eventsModalsDemo, btnText);
-        modals.isDirectModalVisible(eventsModalsDemo, true);
-        cy.get(`${eventsModalsDemo} ${modals.modalContent}`).should('to.be.enabled')  // TODO!!!
-        cy.get('.modal.fade').last().should('have.class', 'show');
-        modals.pressEscOnModal();
-        // modals.isDemoContainsTxt(eventsModalsDemo, eventOnEscHide);
-        // modals.isDemoContainsTxt(eventsModalsDemo, eventOnEcsHidden);
-      });
-    });
-
-    describe('Auto shown modal', () => {
-      beforeEach(() => modals.scrollToMenu('Auto shown modal'));
-
-      const autoDemo = modals.exampleDemosArr.directiveAutoShow;
-      const btnText = 'Render auto-shown modal';
-      const btnX = '×';
-
-      it('example contains the button "Render auto-shown modal"', () => {
-        modals.isButtonExist(autoDemo, btnText);
-      });
-
-      it(`when user clicks on the "Render auto-shown modal" button, then modal is opened, it appeared in the DOM`,
-        () => {
-          modals.clickByText(autoDemo, btnText);
-          modals.isDirectModalVisible(autoDemo, true);
-        });
-
-      it(`when user closes the modal then modal is removed from the DOM`,
-        () => {
-          modals.clickByText(autoDemo, btnText);
-          modals.clickOnDirectModalBtn(autoDemo, modals.crossSelector, btnX);
-          modals.isModalNotEnabled(autoDemo, true);
-        });
     });
   });
 });

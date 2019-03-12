@@ -10,6 +10,7 @@ export class ModalsPo extends BaseComponent {
   modalDialog = '.modal-dialog';
   modalBody = '.modal-body';
   modalHeader = '.modal-header';
+  modalFooter = '.modal-footer';
   modalTitle = '.modal-title';
   serviceModalBtn = 'modal-container button';
   modalBackdrop = '.modal-backdrop';
@@ -42,28 +43,28 @@ export class ModalsPo extends BaseComponent {
     directiveAutoShow: 'demo-modal-auto-shown'
   };
 
-  isElementVisible(baseSelector: string, elementToFind: string, elemNumber = 0) {
-    cy.get(`${baseSelector} ${elementToFind}`).eq(elemNumber).should('be.visible');
+  isElementVisible(baseSelector: string, additionalSelector: string, elementIndex = 0) {
+    cy.get(`${baseSelector} ${additionalSelector}`).eq(elementIndex).should('be.visible');
   }
 
-  isElemTextCorrect(baseSelector: string, itemSel: string, expectedText: string, rowNum = 0) {
-    cy.get(baseSelector).find(itemSel).eq(rowNum).invoke('text')
-      .should('contain', expectedText);
+  isItemTextContains(baseSelector: string, itemSelector: string, expectedText: string, elementIndex = 0) {
+    cy.get(baseSelector).find(itemSelector).eq(elementIndex).invoke('text')
+      .should('to.contain', expectedText);
   }
 
-  isModalVisible(modalSelector: string, visible: boolean, elementNumber = 0) {
-    cy.get(`${'body'} ${modalSelector}`).find('.modal-content').eq(elementNumber)
+  isModalVisible(modalSelector: string, visible: boolean, elementIndex = 0) {
+    cy.get(`${'body'} ${modalSelector}`).find('.modal-content').eq(elementIndex)
       .should(visible ? 'to.be.visible' : 'not.to.be.visible');
   }
 
-  isDirectModalVisible(baseSelector: string, visible: boolean, elementNumber = 0) {
-    cy.get(baseSelector).find('.modal-content').eq(elementNumber)
+  isDirectModalVisible(baseSelector: string, visible: boolean, elementIndex = 0) {
+    cy.get(baseSelector).find('.modal-content').eq(elementIndex)
       .should(visible ? 'to.be.visible' : 'not.to.be.visible');
   }
 
-  isModalNotEnabled(modalSelector: string, disabled: boolean) {
+  isModalEnabled(modalSelector: string, enabled: boolean) {
     cy.get(`${'body'} ${modalSelector}`).find('.modal-content')
-      .should(disabled ? 'not.to.be.enabled' : 'to.be.enabled');
+      .should(enabled ? 'to.be.enabled' : 'not.to.be.enabled');
   }
 
   isBackdropEnabled() {
@@ -78,35 +79,16 @@ export class ModalsPo extends BaseComponent {
     cy.get(`${'body'} ${this.modalBackdrop}`).click({ force: true });
   }
 
-  isModalBtnExist(btnTitle: string, elemNumber = 0) {
-    cy.get(this.modalContainer).find('button').eq(elemNumber).invoke('text')
-      .should('contain', btnTitle);
-  }
-
-  isDirectModalBtnExist(modalSelector: string, btnTitle: string, elemNumber = 0) {
-    cy.get(modalSelector).find('button').eq(elemNumber).invoke('text')
-      .should('contain', btnTitle);
-  }
-
-  clickOnModalBtn(btnTitle: string) {
-    cy.get(this.serviceModalBtn).contains(btnTitle).click();
-  }
-
   clickOnDirectModalBtn(baseSelector: string, modalSelector: string, btnTitle: string, elementNumber = 0) {
     cy.get(`${baseSelector} ${modalSelector}`).eq(elementNumber).contains(btnTitle).click();
   }
 
-  checkElementsQuantity(elemToCount: string, expectedQuantity: number) {
-    cy.get(elemToCount).should('have.length', expectedQuantity);
-  }
-
-  isModalDemoContainsText(baseSelector: string, expectedText: string, demoNumber = 0) {
-    cy.get(`${baseSelector} ${this.demoCardBlock}`).eq(demoNumber).invoke('text')
-      .should('contain', expectedText);
+  checkElementsQuantity(elementsSelector: string, expectedQuantity: number) {
+    cy.get(elementsSelector).should('have.length', expectedQuantity);
   }
 
   isModalTitleIs(modalTitle: string) {
-    cy.get('h4').should('contain', modalTitle);
+    cy.get(`${this.modalHeader} h4`).should('to.contain', modalTitle);
   }
 
   isModalTooltipVisible() {
@@ -116,7 +98,7 @@ export class ModalsPo extends BaseComponent {
       .should('to.have.class', 'show');
   }
 
-  isModalWindowWidth(modalSelector: string, expectedWidth: string, elementNumber = 0) {
+  isModalWindowWidthEqual(modalSelector: string, expectedWidth: string, elementNumber = 0) {
     cy.get(`${modalSelector} ${'.modal-content'}`).eq(elementNumber)
       .should('have.css', 'width', expectedWidth);
   }
@@ -130,7 +112,7 @@ export class ModalsPo extends BaseComponent {
       .should('have.descendants', childName);
   }
 
-  pressEscOnModal() {
-    cy.get(`body .modal.fade.show`).type('{esc}', {force: true});
+  pressEscOnModal(baseSelector: string) {
+    cy.get(`${baseSelector} ${'.show'}`).type('{esc}');
   }
 }
