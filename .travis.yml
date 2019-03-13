@@ -9,6 +9,8 @@ git:
   depth: 3
   submodules: false
 
+TIME=`date '+%Y%m%d%2H%2M%2S'`
+
 env:
   global:
     - MOZ_HEADLESS=1
@@ -17,7 +19,7 @@ env:
     - BROWSER_PROVIDER_READY_FILE=/tmp/sauce-connect-ready
     - LOGS_DIR=/tmp/logs
     - CY_KEY=4aa7a1c0-3a4f-444e-b324-6fc305a543a8
-    - DATE=`date '+%Y%m%d%2H%2M%2S'`
+    - DATE="$TIME"
     - VERSION=$(cat package.json | grep version | head -1 | awk -F':' '{ print $2 }' | sed 's/[\",]//g')
 
 #     test cypress smoke
